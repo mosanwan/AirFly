@@ -33,7 +33,17 @@ package socketConnection.client
 				case ServerMsgDefine.GET_ROOM_LIST:
 					doGetRoomList(cByte);
 				break;
+				case ServerMsgDefine.CREATE_ROOM_RESULT:
+					doCreateRoomResult(cByte);
+					break;
 			}
+		}
+		
+		private static function doCreateRoomResult(cByte:CustomBytes):void//处理创建房间结果
+		{
+			var roomName:String=cByte.readCustomString();
+			var roomIndex:int=cByte.readInt();
+			DataEventDispatcher.dispatchEvent(
 		}
 		
 		private static function doGetRoomList(cByte:CustomBytes):void

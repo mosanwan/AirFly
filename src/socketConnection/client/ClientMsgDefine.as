@@ -7,6 +7,7 @@ package socketConnection.client
 	public class ClientMsgDefine
 	{
 		public static var GET_ROOM_LIST:String="getRoomList";//获取房间列表
+		public static var CREATE_ROOM_RESULT:String="CreateRoomResult";//创建房间的结果
 		public function ClientMsgDefine()
 		{
 			

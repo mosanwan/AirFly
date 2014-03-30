@@ -26,6 +26,21 @@ package socketConnection.server
 			}
 		}
 		
+		private static function doReturnCreateRoomResult(socket:Socket,room:Room):void//返回创建房间的结果
+		{
+			var byte:CustomBytes=new CustomBytes();
+			byte.writeInt(ServerMsgDefine.CREATE_ROOM_RESULT);
+			byte.writeCustomString(room.roomName);
+			byte.writeInt(room.index);
+			
+			var sendByte:CustomBytes=new CustomBytes();
+			sendByte.writeInt(byte.length);
+			sendByte.writeBytes(byte);
+			socket.writeBytes(sendByte);
+			socket.flush();
+
+		}
+		
 		private static function doCreateRoom(socket:Socket,data:CustomBytes):void
 		{
 			var room:Room=new Room();
@@ -40,6 +55,7 @@ package socketConnection.server
 			{
 				doReturnRoomList(cs);
 			}
+			doReturnCreateRoomResult(socket,room);
 		}
 		
 		private static function doReturnRoomList(socket:Socket):void  //把房间列表推送到客户端

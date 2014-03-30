@@ -60,5 +60,9 @@ package
 		{
 			trace(_dataWorker.state);
 		}
+		public static function show(str:String):void
+		{
+			
+		}
 	}
 }

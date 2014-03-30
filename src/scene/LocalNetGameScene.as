@@ -67,7 +67,9 @@ package scene
 		{
 			GlobalData.serverAdress=GlobalData.hostAdress;
 			GlobalData.serverPort=GlobalData.hostPort;
+			SocketManager.getInstance().initAsClient(GlobalData.serverAdress,GlobalData.serverPort);
 			SceneMgr.getInstance().gotoScene(GameHallScene);
+			
 		}
 		
 		public function onBack(e:Event):void

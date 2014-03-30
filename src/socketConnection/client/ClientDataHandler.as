@@ -1,9 +1,15 @@
 package socketConnection.client
 {
+	import flash.events.Event;
 	import flash.net.Socket;
+	
+	import data.GlobalData;
+	
+	import event.DataEventDispatcher;
 	
 	import socketConnection.CustomBytes;
 	import socketConnection.server.ServerMsgDefine;
+	import socketConnection.server.std.Room;
 
 	/**
 	 *author T
@@ -33,13 +39,18 @@ package socketConnection.client
 		private static function doGetRoomList(cByte:CustomBytes):void
 		{
 			var roomNum:int=cByte.readInt();
+			GlobalData.roolList=new Vector.<Room>();
 			for (var i:int = 0; i < roomNum; i++) 
 			{
 				var roomIndex:int=cByte.readInt();
 				var roomName:String=cByte.readCustomString();
-				trace("获得房间列表 索引 "+roomIndex +"  房间名  "+roomName);
+				var room:Room=new Room();
+				room.index=roomIndex;
+				room.roomName=roomName;
+				GlobalData.roolList.push(room);
+				
 			}
-			
+			DataEventDispatcher.dispatchEvent(new Event(ClientMsgDefine.GET_ROOM_LIST));
 		}
 	}
 }

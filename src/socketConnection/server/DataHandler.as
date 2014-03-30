@@ -17,10 +17,10 @@ package socketConnection.server
 			var type:int=data.readInt();
 			switch(type)
 			{
-				case ServerMsgDefine.GET_ROOM_LIST:
+				case ServerMsgDefine.GET_ROOM_LIST: //客户端请求房间列表
 					doReturnRoomList(socket);
 					break;
-				case ServerMsgDefine.CREATE_ROOM:
+				case ServerMsgDefine.CREATE_ROOM://客户端请求创建服务器
 					doCreateRoom(socket,data);
 					break;
 			}
@@ -61,7 +61,6 @@ package socketConnection.server
 			
 			var sendData:CustomBytes=new CustomBytes();
 			sendData.writeInt(b2.length);//
-			trace("数据包长度 "+b2.length);
 			sendData.writeBytes(b2);
 			sendData.compress();
 			

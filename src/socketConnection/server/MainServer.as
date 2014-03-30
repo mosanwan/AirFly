@@ -6,7 +6,10 @@ package socketConnection.server
 	import flash.net.ServerSocket;
 	import flash.net.Socket;
 	
+	import event.DataEventDispatcher;
+	
 	import socketConnection.CustomBytes;
+	import socketConnection.SocketManager;
 	import socketConnection.server.std.Client;
 
 	public class MainServer
@@ -32,6 +35,7 @@ package socketConnection.server
 				_serverSocket.listen();
 				_serverSocket.addEventListener(ServerSocketConnectEvent.CONNECT,onClientConnect);
 				Main.show("初始化服务器成功 " +port);
+				DataEventDispatcher.dispatchEvent(new Event(SocketManager.SERVER_INIT_SUCCESS));
 			}catch(er:Error){
 				//如果报错 换端口重试
 				Main.show("初始化服务器失败，开始重试");

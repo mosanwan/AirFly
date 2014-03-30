@@ -3,6 +3,8 @@ package data
 	import flash.system.Capabilities;
 	
 	import org.sanwu.wifi.WifiANE;
+	
+	import socketConnection.server.std.Room;
 
 	public class GlobalData
 	{
@@ -21,6 +23,8 @@ package data
 		
 		public static var hostAdress:String;
 		public static var hostPort:int=8650;
+		
+		public static var roolList:Vector.<Room>=new Vector.<Room>();
 		
 		public var wifiAne:WifiANE;
 		public function GlobalData()

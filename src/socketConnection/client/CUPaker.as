@@ -33,7 +33,6 @@ package socketConnection.client
 					var reData:CustomBytes=new CustomBytes();
 					pack.buffer.readBytes(reData);
 					pack.buffer=reData;
-					pack.buffer=new CustomBytes();
 					pack.waitingLength=false;
 				}else{
 					pack.buffer.position=pack.buffer.length;

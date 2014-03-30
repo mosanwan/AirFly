@@ -10,6 +10,7 @@ package scene
 	import flash.text.TextFormat;
 	
 	import data.GlobalData;
+	import data.std.GameRoomData;
 	
 	import event.DataEventDispatcher;
 	
@@ -90,12 +91,17 @@ package scene
 		
 		private function onRoomListGet(e:Event):void
 		{
+			roomList.clear();
+			for (var i:int = 0; i < GlobalData.roolList.length; i++) 
+			{
+				roomList.addData(new GameRoomData(GlobalData.roolList[i].roomName,GlobalData.roolList[i].index,0,1));
+			}
 			
 		}
 		
 		protected function onCreateRoom(event:MouseEvent):void
 		{
-			MainClient.createRoom("TEst");
+			MainClient.createRoom("MyRoom");
 		}
 		
 		protected function onCloseShareBmp(event:MouseEvent):void

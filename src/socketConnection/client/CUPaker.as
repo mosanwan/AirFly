@@ -71,26 +71,21 @@ package socketConnection.client
 			var newByte:CustomBytes=new CustomBytes();
 			pack.buffer.readBytes(newByte,0,pack.packetLenght);
 			ClientDataHandler.hand(pack.socket,newByte);
-			//			trace("解包后还剩下"+pack.buffer.bytesAvailable);
 			if(pack.buffer.bytesAvailable>=4){
 				pack.waitingLength=false;
 				pack.packetLenght=pack.buffer.readInt();
-				//				trace("下一次要读的长度"+pack.packetLenght);
 				var nextStepBuff:CustomBytes=new CustomBytes();
 				pack.buffer.readBytes(nextStepBuff);
 				pack.buffer=nextStepBuff;
 				pack.buffer.position=0;
 				
 				if(pack.buffer.length>=pack.packetLenght){
-					//					trace("剩下的够");
 					unPack(pack);
 				}else{
-					//					trace("剩下的长度不够了");
 					pack.buffer.position=nextStepBuff.length;
 					return;
 				}
 			}else{
-				//				trace("剩下的数据不能获取长度");
 				var ex:CustomBytes=new CustomBytes();
 				pack.buffer.readBytes(ex);
 				pack.buffer.position=ex.length;

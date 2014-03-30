@@ -1,5 +1,6 @@
 package socketConnection.server
 {
+	import flash.events.OutputProgressEvent;
 	import flash.net.Socket;
 	import flash.utils.ByteArray;
 	
@@ -26,7 +27,7 @@ package socketConnection.server
 			}
 		}
 		
-		private static function doReturnCreateRoomResult(socket:Socket,room:Room):void//返回创建房间的结果
+		private static function doReturnCreateRoomResult(soc:Socket,room:Room):void//返回创建房间的结果
 		{
 			var byte:CustomBytes=new CustomBytes();
 			byte.writeInt(ServerMsgDefine.CREATE_ROOM_RESULT);
@@ -36,8 +37,10 @@ package socketConnection.server
 			var sendByte:CustomBytes=new CustomBytes();
 			sendByte.writeInt(byte.length);
 			sendByte.writeBytes(byte);
-			socket.writeBytes(sendByte);
-			socket.flush();
+			trace("返回创建结果"+soc.remoteAddress+"sendb"+sendByte.length);
+			//sendByte.compress();
+			soc.writeBytes(sendByte);
+			soc.flush();
 
 		}
 		
@@ -78,11 +81,28 @@ package socketConnection.server
 			var sendData:CustomBytes=new CustomBytes();
 			sendData.writeInt(b2.length);//
 			sendData.writeBytes(b2);
-			sendData.compress();
-			
+			trace("返回房间列表"+socket.remoteAddress+"    sb "+sendData.length);
+			//sendData.compress();
 			socket.writeBytes(sendData);
 			socket.flush();
 			
+		}
+		public static var dataBuffer:CustomBytes=new CustomBytes();
+		public static function addToBufferSend(soc:Socket,dat:CustomBytes):void
+		{
+			dataBuffer.writeBytes(dat);
+			if(!soc.hasEventListener(OutputProgressEvent.OUTPUT_PROGRESS))
+			{
+				soc.addEventListener(OutputProgressEvent.OUTPUT_PROGRESS,onMoveDataToNet);
+				soc.writeBytes(dataBuffer);
+			}else{
+				
+			}
+		}
+		
+		protected static function onMoveDataToNet(e:OutputProgressEvent):void
+		{
+			(e.target as Socket).removeEventListener(OutputProgressEvent.OUTPUT_PROGRESS,onMoveDataToNet);
 		}
 	}
 }

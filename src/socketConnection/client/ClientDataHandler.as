@@ -43,13 +43,19 @@ package socketConnection.client
 		{
 			var roomName:String=cByte.readCustomString();
 			var roomIndex:int=cByte.readInt();
-			DataEventDispatcher.dispatchEvent(
+			var room:Room=new Room();
+			room.roomName=roomName;
+			room.index=roomIndex;
+			GlobalData.isMeRoomMaster=true;
+			GlobalData.myRoom=room;
+			
+			DataEventDispatcher.dispatchEvent(new Event(ClientMsgDefine.CREATE_ROOM_RESULT));
 		}
 		
 		private static function doGetRoomList(cByte:CustomBytes):void
 		{
 			var roomNum:int=cByte.readInt();
-			GlobalData.roolList=new Vector.<Room>();
+			GlobalData.roomList=new Vector.<Room>();
 			for (var i:int = 0; i < roomNum; i++) 
 			{
 				var roomIndex:int=cByte.readInt();
@@ -57,7 +63,7 @@ package socketConnection.client
 				var room:Room=new Room();
 				room.index=roomIndex;
 				room.roomName=roomName;
-				GlobalData.roolList.push(room);
+				GlobalData.roomList.push(room);
 				
 			}
 			DataEventDispatcher.dispatchEvent(new Event(ClientMsgDefine.GET_ROOM_LIST));

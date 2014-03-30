@@ -6,6 +6,8 @@ package socketConnection.server
 	import flash.net.ServerSocket;
 	import flash.net.Socket;
 	
+	import data.GlobalData;
+	
 	import event.DataEventDispatcher;
 	
 	import socketConnection.CustomBytes;
@@ -35,6 +37,7 @@ package socketConnection.server
 				_serverSocket.listen();
 				_serverSocket.addEventListener(ServerSocketConnectEvent.CONNECT,onClientConnect);
 				Main.show("初始化服务器成功 " +port);
+				GlobalData.serverPort=port;
 				DataEventDispatcher.dispatchEvent(new Event(SocketManager.SERVER_INIT_SUCCESS));
 			}catch(er:Error){
 				//如果报错 换端口重试
@@ -59,10 +62,10 @@ package socketConnection.server
 		protected function onClientData(e:ProgressEvent):void
 		{
 			var socket:Socket=e.target as Socket;
-			var data:CustomBytes=new CustomBytes();
-			socket.readBytes(data);
-			data.uncompress();
-			UPacker.hand(socket,data);
+			var dat:CustomBytes=new CustomBytes();
+			socket.readBytes(dat);
+			//dat.uncompress();
+			UPacker.hand(socket,dat);
 		}
 		
 		protected function onClientClose(e:Event):void

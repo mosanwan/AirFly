@@ -16,6 +16,7 @@ package socketConnection.server
 		public static var JOINT_TEAM:int=6;//加入战队
 		public static var CREATE_ROOM_RESULT:int=7;//返回创建房间结果
 		
+		
 		public function ServerMsgDefine()
 		{
 		}

@@ -14,6 +14,7 @@ package scene
 	
 	import event.DataEventDispatcher;
 	
+	import socketConnection.client.ClientDataHandler;
 	import socketConnection.client.ClientMsgDefine;
 	import socketConnection.client.MainClient;
 	
@@ -92,16 +93,22 @@ package scene
 		private function onRoomListGet(e:Event):void
 		{
 			roomList.clear();
-			for (var i:int = 0; i < GlobalData.roolList.length; i++) 
+			for (var i:int = 0; i < GlobalData.roomList.length; i++) 
 			{
-				roomList.addData(new GameRoomData(GlobalData.roolList[i].roomName,GlobalData.roolList[i].index,0,1));
+				roomList.addData(new GameRoomData(GlobalData.roomList[i].roomName,GlobalData.roomList[i].index,0,1));
 			}
 			
 		}
 		
 		protected function onCreateRoom(event:MouseEvent):void
 		{
+			DataEventDispatcher.addEventListener(ClientMsgDefine.CREATE_ROOM_RESULT,onCreateRoomResult);
 			MainClient.createRoom("MyRoom");
+		}
+		
+		private function onCreateRoomResult(e:Event):void
+		{
+			SceneMgr.getInstance().gotoScene(GameRoomScene);
 		}
 		
 		protected function onCloseShareBmp(event:MouseEvent):void

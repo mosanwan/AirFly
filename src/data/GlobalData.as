@@ -24,7 +24,9 @@ package data
 		public static var hostAdress:String;
 		public static var hostPort:int=8650;
 		
-		public static var roolList:Vector.<Room>=new Vector.<Room>();
+		public static var roomList:Vector.<Room>=new Vector.<Room>();
+		public static var myRoom:Room;
+		public static var isMeRoomMaster:Boolean=false;
 		
 		public var wifiAne:WifiANE;
 		public function GlobalData()

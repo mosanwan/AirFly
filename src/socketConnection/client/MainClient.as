@@ -28,10 +28,11 @@ package socketConnection.client
 		protected function onData(e:ProgressEvent):void
 		{
 			var socket:Socket=e.target as Socket;
-			var data:CustomBytes=new CustomBytes();
-			socket.readBytes(data);
-			data.uncompress();
-			CUPaker.hand(socket,data);
+			var dat:CustomBytes=new CustomBytes();
+			socket.readBytes(dat);
+			//dat.uncompress();
+			trace("解压后的大小"+dat.length);
+			CUPaker.hand(socket,dat);
 		}
 		
 		protected function onConnected(e:Event):void
@@ -51,7 +52,7 @@ package socketConnection.client
 			var sendData:CustomBytes=new CustomBytes();
 			sendData.writeInt(bytes.length);
 			sendData.writeBytes(bytes);
-			sendData.compress();
+			//sendData.compress();
 			socket.writeBytes(sendData);
 			socket.flush();
 		}

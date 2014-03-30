@@ -40,10 +40,16 @@ package scene
 			joinOthers.addEventListener(MouseEvent.CLICK,onConnectToServer);
 			
 			DataEventDispatcher.addEventListener("BACK",onBack);
+			DataEventDispatcher.addEventListener(SocketManager.CONNECT_TO_SERVER_SUCCESS,onConnectedToServer);
 			
 			SceneMgr.show(this);
 			SceneMgr.getInstance().clearnPreScene();
 			
+		}
+		
+		private function onConnectedToServer(e:Event):void//连接服务器成功 进入房间场景
+		{
+			SceneMgr.getInstance().gotoScene(GameHallScene);
 		}
 		
 		protected function onConnectToServer(event:MouseEvent):void
@@ -68,7 +74,7 @@ package scene
 			GlobalData.serverAdress=GlobalData.hostAdress;
 			GlobalData.serverPort=GlobalData.hostPort;
 			SocketManager.getInstance().initAsClient(GlobalData.serverAdress,GlobalData.serverPort);
-			SceneMgr.getInstance().gotoScene(GameHallScene);
+			
 			
 		}
 		

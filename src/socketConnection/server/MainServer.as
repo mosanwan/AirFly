@@ -5,90 +5,67 @@ package socketConnection.server
 	import flash.events.ServerSocketConnectEvent;
 	import flash.net.ServerSocket;
 	import flash.net.Socket;
-	import flash.utils.Dictionary;
 	
-	import event.DataEventDispatcher;
-	
-	import socketConnection.ISocket;
-	import socketConnection.SocketManager;
-	import socketConnection.client.Client;
 	import socketConnection.CustomBytes;
+	import socketConnection.server.std.Client;
 
-	/**
-	 *author T
-	 *2014-3-29上午1:36:19
-	 */
-	public class MainServer implements ISocket
+	public class MainServer
 	{
-//		private static var ins:MainServer;
-//		public static function getInstance():MainServer
-//		{
-//			if(!ins) ins=new MainServer();
-//			return ins;
-//		}
-		public var clientList:Dictionary;
-		private var serverSocket:ServerSocket;
-		private var handler:ServerDataHandler;
+		private var  _serverSocket:ServerSocket;
 		public function MainServer(adress:String,port:int)
 		{
-			serverSocket=new ServerSocket();
-			serverSocket.addEventListener(ServerSocketConnectEvent.CONNECT,onClientConnect);
-			clientList=new Dictionary();
-			handler=new ServerDataHandler();
-			init(adress,port);
+			_serverSocket=new ServerSocket();
+			init(port);
 		}
-		public function init(adress:String,port:int):void{
-			try
+		public function init(port:int):void
+		{
+			Main.show("初始化服务器! 端口:"+port);
+			if(_serverSocket.bound)
 			{
-				serverSocket.bind(port,adress);
-				serverSocket.listen();
-				DataEventDispatcher.dispatchEvent(new Event(SocketManager.SERVER_INIT_SUCCESS));
-				trace("SOCKET服务器初始化成功");
-			} 
-			catch(error:Error) 
-			{
-				trace("SOCKET服务器初始化失败");
+				_serverSocket.close();
+				_serverSocket=new ServerSocket();
+				
+				
 			}
+			try{
+				_serverSocket.bind(port);
+				_serverSocket.listen();
+				_serverSocket.addEventListener(ServerSocketConnectEvent.CONNECT,onClientConnect);
+				Main.show("初始化服务器成功 " +port);
+			}catch(er:Error){
+				//如果报错 换端口重试
+				Main.show("初始化服务器失败，开始重试");
+				init(Math.random()*65520>>0)
+			}
+			
+			
 		}
 		protected function onClientConnect(e:ServerSocketConnectEvent):void
 		{
-			trace("客户端进行连接");
-			var socket:Socket=e.socket;
-			socket.addEventListener(ProgressEvent.SOCKET_DATA,onClientData);
-			socket.addEventListener(Event.CLOSE,onClientClose);
-			var client:Client=new Client();
-			client.ip=socket.remoteAddress;
-			clientList[socket]=client;
-			socket.writeInt(0);
-			socket.flush();
-		}
-		
-		protected function onClientClose(e:Event):void
-		{
-			var socket:Socket=e.target as Socket;
-			socket.removeEventListener(ProgressEvent.SOCKET_DATA,onClientData);
-			socket.removeEventListener(Event.CLOSE,onClientClose);
-			trace((clientList[socket] as Client).nickName+" 断开连接");
-			delete clientList[e.target];
+			var c:Client=new Client();
+			c.socket=e.socket;
+			c.ip=e.socket.remoteAddress;
+			c.socket.addEventListener(ProgressEvent.SOCKET_DATA,onClientData);
+			c.socket.addEventListener(Event.CLOSE,onClientClose);
+			RemoteData.clientList[e.socket]=c;
+			Main.show("客户端连接 "+c.ip);
 			
 		}
 		
 		protected function onClientData(e:ProgressEvent):void
 		{
-			trace("客户端消息 ");
 			var socket:Socket=e.target as Socket;
-			handler.hand(socket,e.bytesLoaded);
+			var data:CustomBytes=new CustomBytes();
+			socket.readBytes(data);
+			data.uncompress();
+			UPacker.hand(socket,data);
 		}
 		
-		
-		
-		public function send(data:CustomBytes):void
+		protected function onClientClose(e:Event):void
 		{
-			
-		}
-		public function receive(data:CustomBytes):void
-		{
-			
+			var socket:Socket=e.target as Socket;
+			Main.show("客户端断开连接 "+socket.remoteAddress);
+			delete RemoteData.clientList[socket];
 		}
 	}
 }

@@ -7,7 +7,7 @@ package socketConnection.server
 	public class ServerMsgDefine
 	{
 		
-		public static var FIREST_CONNECT:int=0; //客户端第一次连接
+		public static var FIREST_CONNECT:int=0;//客户端第一次连接
 		public static var CREATE_ROOM:int=1;//创建房间
 		public static var REMOVE_ROOM:int=2;//解散房间
 		public static var GET_ROOM_LIST:int=3;//获取房间列表

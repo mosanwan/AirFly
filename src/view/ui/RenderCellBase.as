@@ -14,5 +14,13 @@ package view.ui
 		{
 			
 		}
+		public function initEvent():void
+		{
+			
+		}
+		public function removeEvent():void
+		{
+			
+		}
 	}
 }

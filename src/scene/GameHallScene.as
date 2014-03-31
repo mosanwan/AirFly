@@ -14,7 +14,6 @@ package scene
 	
 	import event.DataEventDispatcher;
 	
-	import socketConnection.client.ClientDataHandler;
 	import socketConnection.client.ClientMsgDefine;
 	import socketConnection.client.MainClient;
 	
@@ -24,7 +23,7 @@ package scene
 	
 	import view.ui.AutoScaleList;
 	import view.ui.Button01;
-	import view.ui.RoomLabel;
+	import view.ui.RoomListCell;
 	
 	public class GameHallScene extends Sprite implements ISceneBase
 	{
@@ -59,7 +58,7 @@ package scene
 			
 			
 			
-			roomList=new AutoScaleList(RoomLabel);
+			roomList=new AutoScaleList(RoomListCell);
 			roomList.setScaleSize(0.5,0.96-(serverInfoText.height/GlobalData.gameHeight));
 			roomList.y=GlobalData.gameHeight-roomList.height;
 			roomList.x=10;
@@ -88,6 +87,7 @@ package scene
 			
 			SceneMgr.show(this);
 			SceneMgr.getInstance().clearnPreScene();
+			MainClient
 		}
 		
 		private function onRoomListGet(e:Event):void

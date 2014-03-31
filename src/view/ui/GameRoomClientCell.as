@@ -13,10 +13,12 @@ package view.ui
 		
 		public function addData(data:Object):void
 		{
+			
 		}
 		
 		public function dispose():void
 		{
+			
 		}
 	}
 }

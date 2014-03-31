@@ -64,5 +64,13 @@
 		{
 			return tf.text;
 		}
+		public function set enabled(b:Boolean):void
+		{
+			this.mouseEnabled=b;
+		}
+		public function get enabled():Boolean
+		{
+			return this.mouseEnabled;
+		}
 	}
 }

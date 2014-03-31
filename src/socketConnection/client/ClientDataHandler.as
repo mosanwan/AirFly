@@ -7,6 +7,9 @@ package socketConnection.client
 	
 	import event.DataEventDispatcher;
 	
+	import scene.GameHallScene;
+	import scene.SceneMgr;
+	
 	import socketConnection.CustomBytes;
 	import socketConnection.server.ServerMsgDefine;
 	import socketConnection.server.std.Room;
@@ -36,7 +39,17 @@ package socketConnection.client
 				case ServerMsgDefine.CREATE_ROOM_RESULT:
 					doCreateRoomResult(cByte);
 					break;
+				case ServerMsgDefine.RETURN_TO_HALL:
+					doReturnToHall();
+					break;
 			}
+		}
+		
+		private static function doReturnToHall():void//返回到大厅 
+		{
+			GlobalData.myRoom=null;
+			GlobalData.isMeRoomMaster=false;
+			SceneMgr.getInstance().gotoScene(GameHallScene);
 		}
 		
 		private static function doCreateRoomResult(cByte:CustomBytes):void//处理创建房间结果

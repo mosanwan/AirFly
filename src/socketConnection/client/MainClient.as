@@ -31,7 +31,7 @@ package socketConnection.client
 			var dat:CustomBytes=new CustomBytes();
 			socket.readBytes(dat);
 			//dat.uncompress();
-			trace("解压后的大小"+dat.length);
+			//trace("解压后的大小"+dat.length);
 			CUPaker.hand(socket,dat);
 		}
 		
@@ -52,7 +52,32 @@ package socketConnection.client
 			var sendData:CustomBytes=new CustomBytes();
 			sendData.writeInt(bytes.length);
 			sendData.writeBytes(bytes);
-			//sendData.compress();
+			socket.writeBytes(sendData);
+			socket.flush();
+		}
+		public static function removeRoom(index:int):void//解散一个房间
+		{
+			var sendData:CustomBytes=new CustomBytes();
+			sendData.writeInt(8); //因为只发2个Int，所以直接写上数据长度
+			sendData.writeInt(ServerMsgDefine.REMOVE_ROOM);
+			sendData.writeInt(index);
+			socket.writeBytes(sendData);
+			socket.flush();
+		}
+		public static function joinRoom(index:int):void
+		{
+			var sendData:CustomBytes=new CustomBytes();
+			sendData.writeInt(8); //因为只发2个Int，所以直接写上数据长度
+			sendData.writeInt(ServerMsgDefine.JOINT_ROOM);
+			sendData.writeInt(index);
+			socket.writeBytes(sendData);
+			socket.flush();
+		}
+		public static function getRoomList():void
+		{
+			var sendData:CustomBytes=new CustomBytes();
+			sendData.writeInt(4);
+			sendData.writeInt(ServerMsgDefine.GET_ROOM_LIST);
 			socket.writeBytes(sendData);
 			socket.flush();
 		}

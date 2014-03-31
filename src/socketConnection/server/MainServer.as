@@ -51,6 +51,7 @@ package socketConnection.server
 		{
 			var c:Client=new Client();
 			c.socket=e.socket;
+			c.nickName=e.socket.remoteAddress;
 			c.ip=e.socket.remoteAddress;
 			c.socket.addEventListener(ProgressEvent.SOCKET_DATA,onClientData);
 			c.socket.addEventListener(Event.CLOSE,onClientClose);

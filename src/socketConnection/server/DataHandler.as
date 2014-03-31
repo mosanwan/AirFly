@@ -14,16 +14,59 @@ package socketConnection.server
 		public function DataHandler()
 		{
 		}
-		public static function hand(socket:Socket,data:CustomBytes):void{
-			var type:int=data.readInt();
+		public static function hand(socket:Socket,dat:CustomBytes):void{
+			var type:int=dat.readInt();
 			switch(type)
 			{
 				case ServerMsgDefine.GET_ROOM_LIST: //客户端请求房间列表
 					doReturnRoomList(socket);
 					break;
 				case ServerMsgDefine.CREATE_ROOM://客户端请求创建服务器
-					doCreateRoom(socket,data);
+					doCreateRoom(socket,dat);
 					break;
+				case ServerMsgDefine.REMOVE_ROOM://移除一个房间 
+					doRemoveRoom(socket,dat);
+					break;
+				case ServerMsgDefine.JOINT_ROOM://加入一个房间
+					doJointRoom(socket,dat);
+					break;
+			}
+		}
+		
+		private static function doJointRoom(socket:Socket, dat:CustomBytes):void//加入房间
+		{
+			var index:int=dat.readInt();
+			var room:Room=RemoteData.roomList[index] ;
+			var client:Client=RemoteData.clientList[socket];
+			if(room!=null){
+				room.addMember(client);
+				doReturnJoinRoomResult(socket);
+			}
+		}
+		
+		private static function doReturnJoinRoomResult(socket:Socket):void//返回加入房间操作结果
+		{
+			
+		}
+		
+		private static function doRemoveRoom(socket:Socket, dat:CustomBytes):void
+		{
+			var index:int=dat.readInt();
+			var room:Room=RemoteData.roomList[index];
+			if(room!=null)
+			{
+				for (var i:int = 0; i < room.membersNum; i++) 
+				{
+					var client:Client=room.members[i];
+					var sendData:CustomBytes=new CustomBytes();
+					sendData.writeInt(4);
+					sendData.writeInt(ServerMsgDefine.RETURN_TO_HALL);//通知这个房间所有人返回到大厅
+					client.socket.writeBytes(sendData);
+					client.socket.flush();
+				}
+				
+				delete RemoteData.roomList[index];
+				
 			}
 		}
 		
@@ -37,8 +80,6 @@ package socketConnection.server
 			var sendByte:CustomBytes=new CustomBytes();
 			sendByte.writeInt(byte.length);
 			sendByte.writeBytes(byte);
-			trace("返回创建结果"+soc.remoteAddress+"sendb"+sendByte.length);
-			//sendByte.compress();
 			soc.writeBytes(sendByte);
 			soc.flush();
 
@@ -51,6 +92,7 @@ package socketConnection.server
 			client.isRoomMaster=true;
 			client.room=room;
 			room.master=client;
+			room.members.push(client);
 			room.index=RemoteData.get_room_id();
 			room.roomName=data.readCustomString();
 			RemoteData.roomList[room.index]=room;
@@ -81,28 +123,9 @@ package socketConnection.server
 			var sendData:CustomBytes=new CustomBytes();
 			sendData.writeInt(b2.length);//
 			sendData.writeBytes(b2);
-			trace("返回房间列表"+socket.remoteAddress+"    sb "+sendData.length);
-			//sendData.compress();
 			socket.writeBytes(sendData);
 			socket.flush();
 			
-		}
-		public static var dataBuffer:CustomBytes=new CustomBytes();
-		public static function addToBufferSend(soc:Socket,dat:CustomBytes):void
-		{
-			dataBuffer.writeBytes(dat);
-			if(!soc.hasEventListener(OutputProgressEvent.OUTPUT_PROGRESS))
-			{
-				soc.addEventListener(OutputProgressEvent.OUTPUT_PROGRESS,onMoveDataToNet);
-				soc.writeBytes(dataBuffer);
-			}else{
-				
-			}
-		}
-		
-		protected static function onMoveDataToNet(e:OutputProgressEvent):void
-		{
-			(e.target as Socket).removeEventListener(OutputProgressEvent.OUTPUT_PROGRESS,onMoveDataToNet);
 		}
 	}
 }

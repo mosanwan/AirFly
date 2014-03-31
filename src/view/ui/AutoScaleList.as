@@ -39,6 +39,7 @@ package view.ui
 			while(con.numChildren>0)
 			{
 				con.removeChildAt(0);
+				
 			}
 		}
 		override public function setScaleSize(sw:Number, sh:Number):void

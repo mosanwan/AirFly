@@ -15,6 +15,8 @@ package socketConnection.server
 		public static var OUT_ROOM:int=5;//退出房间
 		public static var JOINT_TEAM:int=6;//加入战队
 		public static var CREATE_ROOM_RESULT:int=7;//返回创建房间结果
+		public static var RETURN_TO_HALL:int=8;//返回到大厅
+		public static var RETURN_JOIN_ROOM_RESULT:int=9;//返回加入房间结果
 		
 		
 		public function ServerMsgDefine()
